@@ -6,7 +6,7 @@ const url = 'https://wiki.biligame.com/blhx/'
  * 通过船名获取Html页面
  * @param {string} name
  */
-export function getHtmlPage (name) {
+export function getHtmlPage(name) {
   return new Promise((resolve) => {
     https.get(url + encodeURI(name), (res) => {
       let str = ''
@@ -26,7 +26,7 @@ export function getHtmlPage (name) {
  *
  * @param {string} str
  */
-export function getImgSrc (str) {
+export function getImgSrc(str) {
   let obj = {}
   const list = str.match(/<img alt=".*(换装[1-9]?|立绘|誓约|改造)\.jpg".* \/>/g)
   list.forEach(data => {
@@ -38,14 +38,25 @@ export function getImgSrc (str) {
   return obj
 }
 
-export function getFile (skin) {
+export function getShipsData() {
+  return JSON.parse(getFile("data.json")).data
+}
+/**
+ * 
+ * @param {Array} data 
+ */
+export function getShipData(data, name) {
+  return data.filter(val => name = val.name)[0]
+}
+
+export function getFile(skin) {
   return fs.readFileSync(`${__static}/skin/${skin}`).toString()
 }
 /**
  *
  * @param {string} data
  */
-export function getData (data) {
+export function getData(data) {
   let arr = data.split('[')
   arr.shift()
   return arr.map(data => skin(data))
@@ -55,7 +66,7 @@ export function getData (data) {
  * @param {string} str
  * @param {string} shipName
  */
-function skin (data) {
+function skin(data) {
   let res = {
     name: data.slice(0, data.indexOf(']')),
     use: '',
@@ -83,7 +94,7 @@ function skin (data) {
  *
  * @param {string} file
  */
-export function getAllShip (file = 'skin.ini') {
+export function getAllShip(file = 'skin.ini') {
   let str = getFile(file)
   return getData(str)
 }
@@ -93,7 +104,7 @@ export function getAllShip (file = 'skin.ini') {
  * @param {string} src
  * @returns {Promise<boolean>}
  */
-export function haveImg (src) {
+export function haveImg(src) {
   return new Promise(resolve => {
     fs.access(src, (err) => {
       if (err) resolve(false)
@@ -109,7 +120,7 @@ export function haveImg (src) {
     skin: {};
 }} shipObj
  */
-export async function saveImg ({name, skin}) {
+export async function saveImg({ name, skin }) {
   let str = await getHtmlPage(name)
   let skinList = await getImgSrc(str)
   console.log(skinList, skin)
@@ -130,7 +141,7 @@ export async function saveImg ({name, skin}) {
   })
   await getImgAndSave(find(skinList, '立绘'), `${__static}/imgs/${name}_${name}立绘.jpg`)
 }
-function getname (key, name) {
+function getname(key, name) {
   if (key === 0) {
     return '换装'
   }
@@ -140,19 +151,19 @@ function getname (key, name) {
   if (key > 3) {
     return `换装${key + 2}`
   }
-//   console.log(key, name)
+  //   console.log(key, name)
 }
-function find (skinList, name) {
+function find(skinList, name) {
   for (const key in skinList) {
     // console.log(key, name, key.indexOf(name) !== -1)
     if (key.indexOf(name) !== -1) {
-    //   console.log(key, name)
+      //   console.log(key, name)
       return skinList[key]
     }
   }
 }
 
-export function getImgAndSave (url, path) {
+export function getImgAndSave(url, path) {
   return new Promise(resolve => {
     https.get(url, res => {
       let imgData
@@ -175,7 +186,7 @@ export function getImgAndSave (url, path) {
   })
 }
 
-export async function test () {
+export async function test() {
   getAllShip().forEach(async val => {
     for (const src in val.skin) {
       let ok = await haveImg(val.skin[src].src)
@@ -187,5 +198,5 @@ export async function test () {
     console.log('完成')
   })
   //   console.log(getImgSrc(getFile('aa.html')))
-//   console.log(getAllShip())
+  //   console.log(getAllShip())
 }

@@ -5,11 +5,17 @@
 </template>
 
 <script>
+
   export default {
-    name: 'skin'
+    components:{
+      // NavBar
+    }
   }
 </script>
 
 <style>
-  /* CSS */
+  html body{
+    margin: 0;
+    padding: 0;
+  }
 </style>
