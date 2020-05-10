@@ -1,7 +1,8 @@
 <template>
   <div>
     <div>
-      <el-menu router class="el-menu-demo" mode="horizontal">
+      <el-menu class="el-menu-demo"
+               mode="horizontal">
         <el-menu-item index="/">首页</el-menu-item>
         <el-menu-item index="/post">上传</el-menu-item>
         <el-menu-item index="/about">消息中心</el-menu-item>
@@ -11,7 +12,8 @@
 
     <div>
       <el-col :span="4">
-        <el-menu router default-active="2" class="el-menu-vertical-demo">
+        <el-menu default-active="2"
+                 class="el-menu-vertical-demo">
           <!-- <el-input v-model="input" placeholder="请输入内容"></el-input>
           <el-button icon="el-icon-search" circle></el-button> -->
 
@@ -35,16 +37,17 @@
 
 <script>
 export default {
-  name: "NavBar",
+  name: 'NavBar',
   data() {
     return {
-      input: ""
-    };
+      input: ''
+    }
   }
-};
+}
 </script>
 <style>
-/* .el-menu-demo{
-  margin-bottom: 30px;
-} */
+.el-menu-demo {
+  display: flex;
+  justify-content: flex-end;
+}
 </style>

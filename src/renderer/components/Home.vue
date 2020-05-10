@@ -1,34 +1,34 @@
 <template>
   <div class="home">
-      <!-- <el-aside >
+    <!-- <el-aside >
      
       </el-aside>-->
-       <NavBar></NavBar>
-      <el-main style="padding:10px 20px">
-        <router-view></router-view>
-      </el-main>
+    <NavBar></NavBar>
+    <el-main style="padding:10px 20px">
+      <router-view></router-view>
+    </el-main>
   </div>
 </template>
 
 <script>
 
-import NavBar from "./NavBar.vue";
+import NavBar from './NavBar.vue'
 export default {
-  name: "home",
+  name: 'home',
   data() {
     return {
       photos: []
-    };
+    }
   },
-  
+
   methods: {
-    
+
   },
   components: {
-    NavBar,
-  },
-  
-};
+    NavBar
+  }
+
+}
 </script>
 
 <style>
