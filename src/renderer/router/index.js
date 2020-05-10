@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import ScrollPosition from '../server/scross'
 Vue.use(Router)
 
-export default new Router({
+const router =  new Router({
   routes: [
     // {
     //   path: '/',
@@ -15,8 +15,16 @@ export default new Router({
       name: 'home',
       component:require('@/components/Home.vue').default,
       children:[{
-        path:'/',
+        path:'/list',
         component: require('@/components/Photo.vue').default,
+        meta:{
+          keepAlive:true
+        }
+        
+      },
+      {
+        path: '/',
+        redirect: '/list'
       }]
 
     },
@@ -26,9 +34,9 @@ export default new Router({
       component: require('@/components/Details.vue').default
     },
     {
-      path: '/post',
+      path: '/',
       name: 'post',
-      component: require('@/components/Post.vue').default
+      redirect: '/list'
     },
     {
       path: '/details',
@@ -41,3 +49,10 @@ export default new Router({
     // }
   ]
 })
+router.beforeEach((to, from, next) => {
+  // 保存滚动条位置
+  ScrollPosition.save(from.path);
+
+  next();
+});
+export default router

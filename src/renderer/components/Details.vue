@@ -35,9 +35,10 @@ export default {
     this.items = this.$route.params.data.skins
     this.name = this.items[0].skin_name
   },
+  
   methods: {
     back: function () {
-      this.$router.push(`/`)
+      this.$router.push(`/list`)
     },
     changeTittle: function (e) {
       this.name = this.items[e].skin_name

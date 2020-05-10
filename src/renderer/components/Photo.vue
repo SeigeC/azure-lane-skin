@@ -17,6 +17,7 @@
 <script>
 import ShipCard from './ShipCard'
 import { getShipsData, getShipData } from '../server/index'
+import ScrollPosition from '../server/scross'
 export default {
   data() {
     return {
@@ -31,6 +32,7 @@ export default {
       this.$router.push({ name: 'skin', params: { data: getShipData(this.items, e) } })
     }
   },
+  mounted:ScrollPosition.get,
   components: {
     ShipCard
     // HelloWorld,
