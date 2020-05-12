@@ -40,38 +40,40 @@
 </template>
 
 <script>
-import electron from 'electron'
-const { dialog } = electron.remote
+import electron from "electron";
+const { dialog } = electron.remote;
 export default {
-  name: 'NavBar',
-  data () {
+  name: "NavBar",
+  data() {
     return {
-      input: ''
-    }
+      input: ""
+    };
   },
   methods: {
-    Save () {
-      this.$store.dispatch('saveShip')
-      this.$message({ message: '保存成功', type: 'success' })
+    Save() {
+      this.$store.dispatch("saveShip");
+      this.$message({ message: "保存成功", type: "success" });
     },
-    exportFile () {
+    exportFile() {
       const filters = [
         {
-          name: 'skin',
-          extensions: ['ini'] // 文件后缀名类型， 如md
+          name: "skin",
+          extensions: ["ini"] // 文件后缀名类型， 如md
         }
-      ]
+      ];
       const filePath = dialog.showSaveDialog({
         filters,
-        defaultPath: 'Skin',
-        title: '导出',
-        buttonLabel: '导出'
-      })
-      this.$store.dispatch('saveFile', filePath)
-      this.$message({ message: '导出完成', type: 'warning' })
+        defaultPath: "Skin",
+        title: "导出",
+        buttonLabel: "导出"
+      });
+      if (filePath !== undefined) {
+        this.$store.dispatch("saveFile", filePath);
+        this.$message({ message: "导出完成", type: "success" });
+      }
     }
   }
-}
+};
 </script>
 <style>
 .el-menu-demo {

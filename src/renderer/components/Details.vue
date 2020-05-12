@@ -27,11 +27,8 @@
       </el-carousel-item>
     </el-carousel>
     <div class="skin-button">
-      <el-button
-        @click="changeShip"
-        :disabled="getButtonName()"
-        type="primary"
-      >{{ getButtonName() == false ? "应用" : "已应用" }}</el-button>
+      <el-button v-if="ButtonType" disabled type="primary">已应用</el-button>
+      <el-button v-else @click="changeShip()" type="primary">应用</el-button>
     </div>
     <el-dialog title="错误修正" :visible.sync="dialogFormVisible">
       <el-form :model="form">
@@ -50,77 +47,81 @@
   </el-main>
 </template>
 <script>
-import CarouselItem from './CarouselItem'
+import CarouselItem from "./CarouselItem";
 export default {
-  name: 'skins',
-  data () {
+  name: "skins",
+  data() {
     return {
       items: [],
-      name: '',
+      name: "",
       dialogFormVisible: false,
       form: {
-        src_name: '',
-        src: ''
+        src_name: "",
+        src: ""
       },
-      formLabelWidth: '120px'
-      // ButtonType: false
-    }
+      formLabelWidth: "120px",
+      ButtonType: false
+    };
   },
-  created: function () {
+  created: function() {
     if (this.$route.params.data !== undefined) {
-      this.items = this.$route.params.data.skins
-      this.name = this.items[0].skin_name
+      this.items = this.$route.params.data.skins;
+      this.name = this.items[0].skin_name;
+      this.getButtonName();
     }
   },
   methods: {
-    back: function () {
-      this.$router.push(`/list`)
+    back: function() {
+      this.$router.push(`/list`);
     },
-    changeTittle: function (e) {
-      this.name = this.items[e].skin_name
+    changeTittle: function(e) {
+      this.name = this.items[e].skin_name;
+      this.getButtonName();
     },
-    getButtonName: function () {
-      const skin = this.$store.state.Ships.ships[this.$route.params.name]
-      // console.log(skin !== undefined && skin.skin_name === this.name)
-
+    getButtonName: function() {
+      const skin = this.$store.state.Ships.ships[this.$route.params.name];
       if (skin !== undefined && skin.skin_name === this.name) {
-        return true
+        this.ButtonType = true;
+        return;
       }
       if (
         skin === undefined &&
         this.items.length !== 0 &&
         this.name === this.items[0].skin_name
       ) {
-        return true
+        this.ButtonType = true;
+        return;
       }
-      return false
+      this.ButtonType = false;
+      return;
     },
-    changeShip: function () {
-      const skin = this.items.filter(item => item.skin_name === this.name)[0]
-      this.$store.dispatch('changeShip', {
+    changeShip: function() {
+      const skin = this.items.filter(item => item.skin_name === this.name)[0];
+      this.$store.dispatch("changeShip", {
         name: this.$route.params.name,
         skin: skin
-      })
+      });
+      this.getButtonName();
     },
-    changData: function () {
-      const skin = this.items.filter(item => item.skin_name === this.name)[0]
+    changData: function() {
+      const skin = this.items.filter(item => item.skin_name === this.name)[0];
       // console.log(skin)
-      console.log({...skin, ...this.form})
+      console.log({ ...skin, ...this.form });
       this.$http
-        .post('http://39.105.148.183:3030/api/v1/changeSkin', {
+        .post("/changeSkin", {
           ...skin,
           ...this.form
         })
         .then(val => {
-          this.$message({ message: '更新成功', type: 'success' })
-        })
-      this.dialogFormVisible = false
+          this.$message({ message: "更新成功", type: "success" });
+        });
+      this.dialogFormVisible = false;
     }
   },
   components: {
     CarouselItem
   }
-}
+};
 </script>
 
 <style>

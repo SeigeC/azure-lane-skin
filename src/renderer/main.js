@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import axios from 'axios'
+import axios from './server/axios'
 
 import App from './App'
 import router from './router'
@@ -9,6 +9,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
+
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 

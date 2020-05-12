@@ -6,7 +6,7 @@
       :name="item.name"
       :num="2"
       :key="v"
-      :item="getUsuData(item)"
+      :item="getUseData(item)"
       @click.native="goto(item.name)"
     >
     </ship-card>
@@ -19,10 +19,14 @@ import ScrollPosition from '../server/scross'
 export default {
   data () {
     return {
-      items: getShipsData()
+      items: []
     }
   },
-
+  created(){
+    getShipsData().then(val=>{
+      this.items = val
+    })
+  },
   methods: {
     goto: function (name) {
       this.$router.push({
@@ -30,14 +34,19 @@ export default {
         params: { data: getShipData(this.items, name), name: name }
       })
     },
-    getUsuData: function (item) {
+    getUseData: function (item) {
       const data = this.$store.state.Ships.ships
       if (data[item.name] === undefined) {
+        const skins= item.skins.filter(skin=>{
+          console.log(skin)
+          const id = skin.id[skin.id.length-1]
+          return id!=='8'&&id!=='9'
+        })
         this.$store.dispatch('changeShip', {
           name: item.name,
-          skin: item.skins[0]
+          skin: skins[0]
         })
-        return item.skins[0]
+        return skins[0]
       }
       return data[item.name]
     }

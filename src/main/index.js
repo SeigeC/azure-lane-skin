@@ -40,7 +40,7 @@ function createWindow () {
       nodeIntegration: true
     }
   })
-
+  mainWindow.webContents.openDevTools()
   mainWindow.loadURL(winURL)
 
   mainWindow.on('closed', () => {
