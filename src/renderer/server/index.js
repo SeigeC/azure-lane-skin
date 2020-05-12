@@ -30,14 +30,33 @@ export function getImgSrc (str) {
   let obj = {}
   const list = str.match(/<img alt=".*(换装[1-9]?|立绘|誓约|改造)\.jpg".* \/>/g)
   list.forEach(data => {
-    console.log()
     const name = data.match(/".*(换装[1-9]?|立绘|誓约|改造)/ig).toString().slice(1)
     const src = data.match(/src=".*\.jpg/ig).toString().slice(5)
     obj[name] = src
   })
   return obj
 }
-
+/**
+ * @returns {object}
+ */
+export function getUseData () {
+  return JSON.parse(getFile('use.json'))
+}
+/**
+ * @returns {Array<{
+            "name": string,
+            "type": string,
+            "skins": Array<
+                {
+                    "id": string,
+                    "skin_name": string,
+                    "src": string,
+                    "src_name": string
+                }
+            >
+            "nationality": string
+        }>}
+ */
 export function getShipsData () {
   return JSON.parse(getFile('data.json')).data
 }
@@ -52,6 +71,11 @@ export function getShipData (data, name) {
 export function getFile (skin) {
   return fs.readFileSync(`${__static}/skin/${skin}`).toString()
 }
+
+export function writeFile (data, path = `${__static}/skin/use.json`) {
+  return fs.writeFileSync(path, data)
+}
+
 /**
  *
  * @param {string} data
@@ -104,13 +128,20 @@ export function getAllShip (file = 'skin.ini') {
  * @param {string} src
  * @returns {Promise<boolean>}
  */
-export function haveImg (src) {
+export function haveImg (name) {
   return new Promise(resolve => {
-    fs.access(src, (err) => {
+    fs.access(`${__static}/imgs/${name}.jpg`, (err) => {
       if (err) resolve(false)
       resolve(true)
     })
   })
+}
+
+export async function getSrc (name, src) {
+  const have = await haveImg(name)
+  if (have === true) return `static/imgs/${name}.jpg`
+  getImgAndSave(src, name)
+  return src
 }
 /**
  *
@@ -163,20 +194,19 @@ function find (skinList, name) {
   }
 }
 
-export function getImgAndSave (url, path) {
+export function getImgAndSave (url, name) {
   return new Promise(resolve => {
     https.get(url, res => {
-      let imgData
+      let imgData = ''
       res.setEncoding('binary')
       res.on('data', function (chunk) {
         imgData += chunk
       })
-      //   console.log(path, url)
 
       res.on('end', function () {
-        fs.writeFile(path, imgData, 'binary', function (err) {
+        fs.writeFile(`${__static}/imgs/${name}.jpg`, imgData, 'binary', function (err) {
           if (err) {
-            console.log('down fail', path)
+            console.log('down fail', name)
           } else {
             resolve()
           }

@@ -1,16 +1,14 @@
 <template>
   <!-- , v-for="photo in photos" :key="photo.id" -->
   <div class="card-list">
-    <ship-card v-for="(item,v) in items"
-               :url="item.skins[0].src"
-               :name="item.name"
-               :num="2"
-               :key="v"
-               @click.native="goto(item.name)">
-      <!-- <img
-        src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-        class="image"
-      />-->
+    <ship-card
+      v-for="(item, v) in items"
+      :name="item.name"
+      :num="2"
+      :key="v"
+      :item="getUsuData(item)"
+      @click.native="goto(item.name)"
+    >
     </ship-card>
   </div>
 </template>
@@ -19,23 +17,34 @@ import ShipCard from './ShipCard'
 import { getShipsData, getShipData } from '../server/index'
 import ScrollPosition from '../server/scross'
 export default {
-  data() {
+  data () {
     return {
-      items: []
+      items: getShipsData()
     }
   },
-  created: function () {
-    this.items = getShipsData()
-  },
+
   methods: {
-    goto: function (e) {
-      this.$router.push({ name: 'skin', params: { data: getShipData(this.items, e) } })
+    goto: function (name) {
+      this.$router.push({
+        name: 'skin',
+        params: { data: getShipData(this.items, name), name: name }
+      })
+    },
+    getUsuData: function (item) {
+      const data = this.$store.state.Ships.ships
+      if (data[item.name] === undefined) {
+        this.$store.dispatch('changeShip', {
+          name: item.name,
+          skin: item.skins[0]
+        })
+        return item.skins[0]
+      }
+      return data[item.name]
     }
   },
-  mounted:ScrollPosition.get,
+  mounted: ScrollPosition.get,
   components: {
     ShipCard
-    // HelloWorld,
   }
 }
 </script>

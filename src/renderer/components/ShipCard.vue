@@ -1,22 +1,41 @@
 <template>
   <div style="position:relative">
-    <el-image :style="`height:${105*num}px;width:${70*num}px;margin-bottom: 10px;`"
-              :src="url"
-              fit="fill"
-              :z-index="zindex"
-              lazy></el-image>
+    <el-image
+      :style="`height:${105 * num}px;width:${70 * num}px;margin-bottom: 10px;`"
+      :src="src"
+      fit="fill"
+      :z-index="zindex"
+      lazy
+    >
 
-    <div class="span-name">{{name}}</div>
+      <el-image
+        :style="
+          `height:${105 * num}px;width:${70 * num}px;margin-bottom: 10px;`
+        "
+        :src="item.src"
+        fit="fill"
+        slot="error"
+        :z-index="zindex"
+        lazy
+      />
+    </el-image>
+
+    <div class="span-name">{{ name }}</div>
   </div>
 </template>
 
 <script>
+import { getSrc } from '../server/index'
 export default {
-  props: ['url', 'name', 'num'],
-  data() {
+  props: ['num', 'item', 'name'],
+  data () {
     return {
-      zindex: -1
+      zindex: -1,
+      src: `static/imgs/${this.item.src_name}.jpg`
     }
+  },
+  created () {
+    getSrc(this.item.src_name, this.item.src)
   }
 }
 </script>

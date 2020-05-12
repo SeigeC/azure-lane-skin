@@ -1,21 +1,25 @@
 <template>
   <div>
     <div>
-      <el-menu class="el-menu-demo"
-               mode="horizontal">
-        <el-menu-item index="/">首页</el-menu-item>
-        <el-menu-item index="/post">上传</el-menu-item>
-        <el-menu-item index="/about">消息中心</el-menu-item>
-        <el-menu-item index="/details">详情</el-menu-item>
+      <el-menu class="el-menu-demo" mode="horizontal">
+        <!-- <el-menu-item index="/about"></el-menu-item>  -->
+        <el-menu-item>
+          <el-link :underline="false" type="text" @click="Save">保存</el-link>
+        </el-menu-item>
+        <!-- <el-button type="text">文字按钮</el-button> -->
+        <!-- <el-link :underline="false">返回</el-link> -->
+        <!-- <li  @click="Save" type="text">返回</li> -->
+        <el-menu-item>
+          <el-link @click="exportFile" :underline="false" type="text">导出配置文件</el-link>
+        </el-menu-item>
       </el-menu>
     </div>
 
     <div>
       <el-col :span="4">
-        <el-menu default-active="2"
-                 class="el-menu-vertical-demo">
+        <el-menu default-active="2" class="el-menu-vertical-demo">
           <!-- <el-input v-model="input" placeholder="请输入内容"></el-input>
-          <el-button icon="el-icon-search" circle></el-button> -->
+          <el-button icon="el-icon-search" circle></el-button>-->
 
           <el-menu-item index="/">
             <span slot="title">首页</span>
@@ -36,11 +40,35 @@
 </template>
 
 <script>
+import electron from 'electron'
+const { dialog } = electron.remote
 export default {
   name: 'NavBar',
-  data() {
+  data () {
     return {
       input: ''
+    }
+  },
+  methods: {
+    Save () {
+      this.$store.dispatch('saveShip')
+      this.$message({ message: '保存成功', type: 'success' })
+    },
+    exportFile () {
+      const filters = [
+        {
+          name: 'skin',
+          extensions: ['ini'] // 文件后缀名类型， 如md
+        }
+      ]
+      const filePath = dialog.showSaveDialog({
+        filters,
+        defaultPath: 'Skin',
+        title: '导出',
+        buttonLabel: '导出'
+      })
+      this.$store.dispatch('saveFile', filePath)
+      this.$message({ message: '导出完成', type: 'warning' })
     }
   }
 }

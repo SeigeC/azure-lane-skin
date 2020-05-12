@@ -1,25 +1,26 @@
-const doc = document;
-let cache = {};
+const doc = document
+let cache = {}
 
 export default {
   // 保存滚动条位置
-  save(path) {
-    cache[path] = doc.documentElement.scrollTop || doc.body.scrollTop;
-    console.log(cache);
+  save (path) {
+    if (document.querySelector('#main')) {
+      cache[path] = document.querySelector('#main').scrollTop
+    }
   },
   // 重置滚动条位置
-  get() {
-      console.log(this.$route.path);
-    const path = this.$route.path;
+  get () {
+    const path = this.$route.path
     this.$nextTick(function () {
-        console.log(cache[path] || 0);
-      doc.documentElement.scrollTop = doc.body.scrollTop = cache[path] || 0;
-    });
+      if (document.querySelector('#main')) {
+        document.querySelector('#main').scrollTop = cache[path]
+      }
+    })
   },
   // 设置滚动条到顶部
-  goTop() {
+  goTop () {
     this.$nextTick(function () {
-      doc.documentElement.scrollTop = doc.body.scrollTop = 0;
-    });
+      doc.documentElement.scrollTop = doc.body.scrollTop = 0
+    })
   }
 }

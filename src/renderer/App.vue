@@ -1,12 +1,8 @@
 <template>
   <div id="app">
     <div class="system-button">
-      <el-button type="danger"
-                 size="mini"
-                 circle />
-      <el-button type="warning"
-                 size="mini"
-                 circle />
+      <el-button @click="close" type="danger" size="mini" circle />
+      <el-button @click="min" type="warning" size="mini" circle />
     </div>
 
     <router-view></router-view>
@@ -14,9 +10,16 @@
 </template>
 
 <script>
+import electron from 'electron'
+const ipcRenderer = electron.ipcRenderer
 export default {
-  components: {
-    // NavBar
+  methods: {
+    close () {
+      ipcRenderer.send('window-close')
+    },
+    min () {
+      ipcRenderer.send('window-min')
+    }
   }
 }
 </script>
@@ -26,6 +29,7 @@ html body {
   margin: 0;
   padding: 0;
 }
+
 .system-button {
   position: fixed;
   height: 22px;

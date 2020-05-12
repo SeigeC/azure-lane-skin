@@ -4,7 +4,7 @@
      
       </el-aside>-->
     <NavBar></NavBar>
-    <el-main style="padding:10px 20px">
+    <el-main id="main">
       <router-view></router-view>
     </el-main>
   </div>
@@ -15,7 +15,7 @@
 import NavBar from './NavBar.vue'
 export default {
   name: 'home',
-  data() {
+  data () {
     return {
       photos: []
     }
@@ -32,6 +32,15 @@ export default {
 </script>
 
 <style>
+.home {
+  height: 100vh;
+}
+#main {
+  padding: 10px 20px;
+  overflow: auto;
+  height: calc(100% - 61px);
+
+}
 .image {
   width: 100%;
 }
@@ -42,8 +51,7 @@ export default {
 .title {
   margin: 4px 0px 4px 0px;
 }
-
-.el-main {
+.el-main{
   text-align: center;
 }
 </style>
